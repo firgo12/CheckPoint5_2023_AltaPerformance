@@ -119,34 +119,45 @@ public class ABBPessoa {
 		}
 	}
 	public ARVORE removeValor(ARVORE p, int info) {
-		if (p != null) {
-			if (info == p.dado.getNumeroConta()) {
-				if (p.esq == null && p.dir == null)
-					return null;
-				else {
-					if (p.esq == null)
-						return p.dir;
-					else if (p.dir == null)
-						return p.esq;
-					else {
-						ARVORE aux, ref;
-						ref = p.dir;
-						aux = p.dir;
-						while (aux.esq != null)
-							aux = aux.esq;
-						aux.esq = p.esq;
-						return ref;
-					}
-				}
-			} else { // procura dado a ser removido na ABB
-				if (info < p.dado.getNumeroConta())
-					p.esq = removeValor(p.esq, info);
-				else
-					p.dir = removeValor(p.dir, info);
-			}
+		if (p == null) {
+			return p;
 		}
+	
+		if (info < p.dado.getNumeroConta()) {
+			p.esq = removeValor(p.esq, info);
+		} else if (info > p.dado.getNumeroConta()) {
+			p.dir = removeValor(p.dir, info);
+		} else {
+			// Encontrou o nó a ser removido
+	
+			// Caso 1: Nó com apenas um filho ou nenhum filho
+			if (p.esq == null) {
+				return p.dir;
+			} else if (p.dir == null) {
+				return p.esq;
+			}
+	
+			// Caso 2: Nó com dois filhos, encontre o sucessor in-order
+			ARVORE aux = findMinValueNode(p.dir);
+	
+			// Copie os dados do sucessor para este nó
+			p.dado = aux.dado;
+	
+			// Remova o sucessor
+			p.dir = removeValor(p.dir, aux.dado.getNumeroConta());
+		}
+	
 		return p;
 	}
+	
+	private ARVORE findMinValueNode(ARVORE node) {
+		ARVORE current = node;
+		while (current.esq != null) {
+			current = current.esq;
+		}
+		return current;
+	}
+	
 	public ARVORE atualizaAlturaBalanceamento (ARVORE p) {
 		/*atualiza informa��o da altura de cada n� depois da remo��o percorre a �rvore usando percurso p�s-ordem para ajustar primeiro os n�s folhas (profundidade maior) e depois os n�veis acima */ 
 		 	if( p != null) {
@@ -169,22 +180,22 @@ public class ABBPessoa {
 			return p;
 		}
 
-	public LinkedList<Pessoa> listaOferta(ARVORE p, double limite) {
-		LinkedList<Pessoa> lista = new LinkedList<Pessoa>();
+		public LinkedList<Pessoa> listaOferta(ARVORE p, double limite) {
+			LinkedList<Pessoa> lista = new LinkedList<Pessoa>();
 		
-		if (p != null) {
-			listaOferta(p.esq, limite);
-			if (p.dado.getSaldo() >= limite) {
-				//System.out.println(p.dado);
-				lista.add(p.dado);
-				return lista;
+			if (p != null) {
+				listaOferta(p.esq, limite);
+		
+				if (p.dado.getSaldo() >= limite) {
+					lista.add(p.dado);
+				}
+		
+				listaOferta(p.dir, limite);
 			}
-			listaOferta(p.dir, limite);
-		}
-		return null;
 		
-	}
-	
+			return lista;
+		}
+		
 	public Pessoa consultaCodigo(ARVORE p, int codigo) {
 		if(p!=null) {
 			if (codigo == p.dado.getNumeroConta())

@@ -70,10 +70,10 @@ public class DivulgaOfertas {
 				}
 				break;
 			case 2:
-				System.out.print("Qual tipo de conta a oferta se destina? ");
-				do {
-					System.out.print("Digite 1- Pessoa Física 2- Pessoa Jurídica: ");
-					op = le.nextInt();
+				 System.out.print("Qual tipo de conta a oferta se destina? ");
+    do {
+        System.out.print("Digite 1- Pessoa Física 2- Pessoa Jurídica: ");
+        op = le.nextInt();
 					switch (op) {
 					case 1:
 						tipoConta = "Física";
@@ -85,26 +85,52 @@ public class DivulgaOfertas {
 						System.out.println("Opção inválida ");
 						op = -1;
 					}
-				} while (op == -1);
-				System.out.print("Qual o valor de saldo mínimo exigido: R$ ");
-				saldo = le.nextDouble();
-				/*
-				 * Fazendo uso de um m�todo da classe ABB, desenvolvido para este problema, uma
-				 * lista de clientes aptos para a oferta � gerada. Nesse trecho de programa que
-				 * tentar fazer o contato com todos os clientes presente na lista.
-				 */
+        if (tipoConta != "Física" && tipoConta != "Juridíca") {
+            System.out.println("Opção inválida");
+        }
+    } while (tipoConta != "Física" && tipoConta != "Juridíca");
+
+	System.out.print("Qual o valor de saldo mínimo exigido: R$ ");
+    double saldoMinimo = le.nextDouble();
+
+    while (true) {
+        LinkedList<Pessoa> lista = new LinkedList<Pessoa>();
+
+        if (tipoConta == "Física") {
+            lista = clienteF.listaOferta(clienteF.root, saldoMinimo);
+        } else {
+            lista = clienteJ.listaOferta(clienteJ.root, saldoMinimo);
+        }
+
+        if (lista.isEmpty()) {
+            System.out.println("Não há mais clientes aptos para a oferta.");
+            break;
+        }
+
+        lista.sort((c1, c2) -> Double.compare(c2.getSaldo(), c1.getSaldo()));
+
+        Pessoa cliente = lista.getFirst();
+        System.out.println("Clientes aptos para a oferta:");
+        System.out.println(cliente);
+        System.out.print("Aceitar a oferta (S/N): ");
+        String resposta = le.next();
+
+        if (resposta.equalsIgnoreCase("S")) {
+            System.out.println("Oferta aceita. Cliente removido da lista.");
+            if (tipoConta == "Física") {
+                clienteF.root = clienteF.removeValor(clienteF.root, cliente.getNumeroConta());
+            } else {
+                clienteJ.root = clienteJ.removeValor(clienteJ.root, cliente.getNumeroConta());
+            }
+            lista.removeFirst();
+        } else {
+            System.out.println("Oferta recusada. Cliente permanece na lista.");
+            lista.removeFirst();
+        }
+    }
+
+    break;
 				
-				LinkedList<Pessoa> lista = new LinkedList<Pessoa>();
-				
-				if(tipoConta.equalsIgnoreCase("Física")) {
-					lista = clienteF.listaOferta(clienteF.root, saldo);
-					System.out.println(lista);
-				} else {
-					lista = clienteJ.listaOferta(clienteJ.root, saldo);
-					System.out.println(lista);
-				}
-				
-				break;
 			case 3:
 				/*
 				 * Implemente o submenu descrito no texto
