@@ -17,7 +17,7 @@ public class DivulgaOfertas {
 		 */
 		ABBPessoa clienteF = new ABBPessoa();
 		ABBPessoa clienteJ = new ABBPessoa();
-		
+
 		int opcao, op, numeroConta;
 		String nome, cpfCnpj;
 		String tipoConta = null;
@@ -57,23 +57,24 @@ public class DivulgaOfertas {
 				 * Intancia um objeto da classe Cliente e insere na ABB correspondente a tipo de
 				 * conta
 				 */
-				
+
 				Pessoa p = new Pessoa(nome, cpfCnpj, tipoConta, numeroConta, saldo);
-				if(tipoConta.equalsIgnoreCase("Física")) {
+				if (tipoConta.equalsIgnoreCase("Física")) {
 					clienteF.root = clienteF.inserirAVL(clienteF.root, p);
 					clienteF.atualizaAlturas(clienteF.root);
-					//System.out.println(clienteF.consultaCodigo(clienteF.root, numeroConta));
+					// System.out.println(clienteF.consultaCodigo(clienteF.root, numeroConta));
 				} else {
 					clienteJ.root = clienteJ.inserirAVL(clienteJ.root, p);
 					clienteJ.atualizaAlturas(clienteJ.root);
-					//System.out.println(clienteJ.consultaCodigo(clienteJ.root, numeroConta));
+					// System.out.println(clienteJ.consultaCodigo(clienteJ.root, numeroConta));
 				}
 				break;
 			case 2:
-				 System.out.print("Qual tipo de conta a oferta se destina? ");
-    do {
-        System.out.print("Digite 1- Pessoa Física 2- Pessoa Jurídica: ");
-        op = le.nextInt();
+
+				System.out.print("Qual tipo de conta a oferta se destina? ");
+				do {
+					System.out.print("Digite 1- Pessoa Física 2- Pessoa Jurídica: ");
+					op = le.nextInt();
 					switch (op) {
 					case 1:
 						tipoConta = "Física";
@@ -85,52 +86,93 @@ public class DivulgaOfertas {
 						System.out.println("Opção inválida ");
 						op = -1;
 					}
-        if (tipoConta != "Física" && tipoConta != "Juridíca") {
-            System.out.println("Opção inválida");
-        }
-    } while (tipoConta != "Física" && tipoConta != "Juridíca");
+					if (tipoConta != "Física" && tipoConta != "Juridíca") {
+						System.out.println("Opção inválida");
+					}
+				} while (tipoConta != "Física" && tipoConta != "Juridíca");
 
-	System.out.print("Qual o valor de saldo mínimo exigido: R$ ");
-    double saldoMinimo = le.nextDouble();
+				System.out.print("Qual o valor de saldo mínimo exigido: R$ ");
+				double saldoMinimo = le.nextDouble();
 
-    while (true) {
-        LinkedList<Pessoa> lista = new LinkedList<Pessoa>();
+				LinkedList<Pessoa> lista = new LinkedList<Pessoa>();
 
-        if (tipoConta == "Física") {
-            lista = clienteF.listaOferta(clienteF.root, saldoMinimo);
-        } else {
-            lista = clienteJ.listaOferta(clienteJ.root, saldoMinimo);
-        }
+				if (tipoConta == "Física") {
+					lista = clienteF.listaOferta(clienteF.root, saldoMinimo);
+				} else {
+					lista = clienteJ.listaOferta(clienteJ.root, saldoMinimo);
+				}
 
-        if (lista.isEmpty()) {
-            System.out.println("Não há mais clientes aptos para a oferta.");
-            break;
-        }
+				if (lista.isEmpty()) {
+					System.out.println("Não há mais clientes aptos para a oferta.");
+					break;
+				}
 
-        lista.sort((c1, c2) -> Double.compare(c2.getSaldo(), c1.getSaldo()));
+				lista.sort((c1, c2) -> Double.compare(c2.getSaldo(), c1.getSaldo()));
 
-        Pessoa cliente = lista.getFirst();
-        System.out.println("Clientes aptos para a oferta:");
-        System.out.println(cliente);
-        System.out.print("Aceitar a oferta (S/N): ");
-        String resposta = le.next();
+				int size = lista.size();
 
-        if (resposta.equalsIgnoreCase("S")) {
-            System.out.println("Oferta aceita. Cliente removido da lista.");
-            if (tipoConta == "Física") {
-                clienteF.root = clienteF.removeValor(clienteF.root, cliente.getNumeroConta());
-            } else {
-                clienteJ.root = clienteJ.removeValor(clienteJ.root, cliente.getNumeroConta());
-            }
-            lista.removeFirst();
-        } else {
-            System.out.println("Oferta recusada. Cliente permanece na lista.");
-            lista.removeFirst();
-        }
-    }
+				Pessoa cliente = lista.getFirst();
+				System.out.println("Clientes aptos para a oferta:");
+				System.out.println(cliente);
+				System.out.print("Aceitar a oferta (S/N): ");
+				String resposta = le.next();
 
-    break;
-				
+				if (resposta.equalsIgnoreCase("S")) {
+					System.out.println("Oferta aceita. Cliente removido da lista.");
+					if (tipoConta == "Física") {
+						clienteF.root = clienteF.removeValor(clienteF.root, cliente.getNumeroConta());
+					} else {
+						clienteJ.root = clienteJ.removeValor(clienteJ.root, cliente.getNumeroConta());
+					}
+					lista.removeFirst();
+				} else {
+					System.out.println("Oferta recusada. Cliente permanece na lista.");
+					lista.removeFirst();
+				}
+				int i = 0;
+				i++;
+
+				do {
+
+					if (tipoConta == "Física") {
+						lista = clienteF.listaOferta(clienteF.root, saldoMinimo);
+					} else {
+						lista = clienteJ.listaOferta(clienteJ.root, saldoMinimo);
+					}
+
+					if (lista.isEmpty()) {
+						System.out.println("Não há mais clientes aptos para a oferta.");
+						break;
+					}
+
+					lista.sort((c1, c2) -> Double.compare(c2.getSaldo(), c1.getSaldo()));
+
+					size = lista.size();
+
+					cliente = lista.getFirst();
+					System.out.println("Clientes aptos para a oferta:");
+					System.out.println(cliente);
+					System.out.print("Aceitar a oferta (S/N): ");
+					resposta = le.next();
+
+					if (resposta.equalsIgnoreCase("S")) {
+						System.out.println("Oferta aceita. Cliente removido da lista.");
+						if (tipoConta == "Física") {
+							clienteF.root = clienteF.removeValor(clienteF.root, cliente.getNumeroConta());
+						} else {
+							clienteJ.root = clienteJ.removeValor(clienteJ.root, cliente.getNumeroConta());
+						}
+						lista.removeFirst();
+					} else {
+						System.out.println("Oferta recusada. Cliente permanece na lista.");
+						lista.removeFirst();
+					}
+
+					i++;
+				} while (i < size);
+
+				break;
+
 			case 3:
 				/*
 				 * Implemente o submenu descrito no texto
@@ -143,8 +185,7 @@ public class DivulgaOfertas {
 		 * Esvazia as ABBs apresentando todos os clientes que aguardam nova portunidade
 		 */
 		le.close();
-		
-		
+
 	}
 
 }
