@@ -1,5 +1,11 @@
 package entidade;
 
+//Ana Beatriz dos Santos Souza		RM 96229
+//Yann Santana						RM 93609
+//Daniel Franceschi					RM 95175					
+//Guilherme Mendes da Cunha			RM 95173					
+//Enzo Mansi						RM 92955
+
 public class Pessoa {
 	private String nome;
 	private String cpfCnpj;

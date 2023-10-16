@@ -6,6 +6,12 @@ import entidade.Pessoa;
 
 public class ABBPessoa {
 	
+	//Ana Beatriz dos Santos Souza		RM 96229
+	//Yann Santana						RM 93609
+	//Daniel Franceschi					RM 95175					
+	//Guilherme Mendes da Cunha			RM 95173					
+	//Enzo Mansi						RM 92955
+	
 	private class ARVORE {
 		Pessoa dado;
 		ARVORE dir;
@@ -208,6 +214,56 @@ public class ABBPessoa {
 			}
 		}
 		return null;
+	}
+	
+	public Pessoa consultaCPF(ARVORE p, int codigo) {
+		if(p!=null) {
+			if (codigo == Integer.parseInt(p.dado.getCpfCnpj()))
+				return p.dado;
+			else {
+				if (codigo < Integer.parseInt(p.dado.getCpfCnpj()))
+					return consultaCPF(p.esq, codigo);
+				else
+					return consultaCPF(p.dir, codigo);
+			}
+		}
+		return null;
+	}
+	
+	public int contaNos(ARVORE p, int cont) {
+		if (p!=null) {
+			cont++;
+			cont = contaNos(p.esq,cont);
+			cont = contaNos(p.dir,cont);
+		}
+		return cont;
+	}
+	
+	public void listaSaldoAcima(ARVORE p, double limite) {
+		if (p != null) {
+			listaSaldoAcima(p.esq, limite);
+			if (p.dado.getSaldo() > limite) 
+				System.out.println(p.dado);
+			listaSaldoAcima(p.dir, limite);
+		}
+	}
+	
+	public int contaSaldoAcima(ARVORE p, double limite ,int cont) {
+		if (p!=null) {
+			contaSaldoAcima(p.esq,limite ,cont);
+			if (p.dado.getSaldo() > limite) 
+				cont++;
+			contaSaldoAcima(p.dir,limite,cont);
+		}
+		return cont;
+	}
+	
+	public void listarArvore(ARVORE p) {
+		if (p != null) {
+			listarArvore(p.esq);
+			System.out.println(p.dado);
+			listarArvore(p.dir);
+		}
 	}
 
 }
